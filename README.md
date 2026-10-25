@@ -3,13 +3,20 @@
 IA, Universidad Católica Boliviana. Un silbido se convierte en una melodía tocada por un piano sintético
 cuyos parámetros evoluciona un algoritmo genético implementado desde cero.
 
+## Estado
+
+Parte 1 lista; motor evolutivo en desarrollo.
+
 ## Contenido
 
 | Carpeta o archivo | Qué es |
 | --- | --- |
-| `parte1_silbido_piano.ipynb` | Notebook: notas del silbido, cromosoma, síntesis y fitness |
+| `silbido_piano.ipynb` | Notebook: notas del silbido, cromosoma, síntesis y fitness |
 | `audios/` | Entradas: `silbido.wav` y 5 notas de piano (D4, F4, A4, C5, D5) |
 | `salidas/` | Audios generados por el notebook |
+| `docs/` | Enunciado del examen |
+| `resultados/` | CSV de las corridas largas del algoritmo genético |
+| `informe/` | Informe final |
 | `requirements.txt` | Librerías necesarias |
 
 ## Cómo correrlo
