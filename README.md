@@ -18,11 +18,10 @@ Falta el informe (`informe/informe.md`), que está en preparación.
 | `docs/` | Enunciado del examen |
 | `resultados/` | CSV de las corridas largas: `combinaciones.csv`, `configs.csv`, `meta.csv` y `azar.csv` |
 | `informe/` | Informe final |
-| `requirements.txt` | Librerías necesarias |
 
 ## Cómo correrlo
 
-1. Python 3.10 o superior. Instalar las librerías: `pip install -r requirements.txt`.
+1. Python 3.10 o superior. Instalar las librerías: `pip install numpy==2.5.3 scipy==1.18.1 pandas==3.0.5 matplotlib==3.11.2 ipykernel==7.4.0`.
 2. Abrir esta carpeta en Visual Studio Code (extensiones Python y Jupyter) y abrir el notebook.
 3. Elegir el kernel de Python y ejecutar todas las celdas de arriba abajo.
 
