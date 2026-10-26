@@ -16,8 +16,8 @@ Falta el informe (`informe/informe.md`), que está en preparación.
 | `audios/` | Entradas: `silbido.wav`, las 5 notas de piano de entrenamiento (D4, F4, A4, C5, D5) y `piano_G4.wav`, que solo se usa en la prueba de generalización |
 | `salidas/` | Audios generados por el notebook: melodías con la referencia, el Gen 0 y el mejor individuo, y la nota A4 con el Gen 0 y con el mejor |
 | `docs/` | Enunciado del examen |
-| `resultados/` | CSV de las corridas largas: `combinaciones.csv`, `configs.csv`, `meta.csv` y `azar.csv` |
-| `informe/` | Informe final |
+| `resultados/` | CSV de las corridas y los experimentos: `combinaciones.csv`, `configs.csv`, `meta.csv`, `azar.csv`, `prematura.csv`, `operadores.csv`, `superficie.csv` y `g4_azar.csv` |
+| `informe/` | `informe.md` y las figuras que genera el notebook en `figuras/` |
 
 ## Cómo correrlo
 
