@@ -5,17 +5,18 @@ cuyos parámetros evoluciona un algoritmo genético implementado desde cero.
 
 ## Estado
 
-Parte 1 lista; motor evolutivo en desarrollo.
+Notebook completo: síntesis, algoritmo genético, comparación de operadores y de configuraciones, y meta-evaluación.
+Falta el informe (`informe/informe.md`), que está en preparación.
 
 ## Contenido
 
 | Carpeta o archivo | Qué es |
 | --- | --- |
-| `silbido_piano.ipynb` | Notebook: notas del silbido, cromosoma, síntesis y fitness |
-| `audios/` | Entradas: `silbido.wav` y 5 notas de piano (D4, F4, A4, C5, D5) |
-| `salidas/` | Audios generados por el notebook |
+| `silbido_piano.ipynb` | Notebook único: notas del silbido, cromosoma, síntesis, fitness, operadores genéticos, ciclo del AG, comparaciones, configuraciones y meta-evaluación |
+| `audios/` | Entradas: `silbido.wav`, las 5 notas de piano de entrenamiento (D4, F4, A4, C5, D5) y `piano_G4.wav`, que solo se usa en la prueba de generalización |
+| `salidas/` | Audios generados por el notebook: melodías con la referencia, el Gen 0 y el mejor individuo, y la nota A4 con el Gen 0 y con el mejor |
 | `docs/` | Enunciado del examen |
-| `resultados/` | CSV de las corridas largas del algoritmo genético |
+| `resultados/` | CSV de las corridas largas: `combinaciones.csv`, `configs.csv`, `meta.csv` y `azar.csv` |
 | `informe/` | Informe final |
 | `requirements.txt` | Librerías necesarias |
 
@@ -25,12 +26,22 @@ Parte 1 lista; motor evolutivo en desarrollo.
 2. Abrir esta carpeta en Visual Studio Code (extensiones Python y Jupyter) y abrir el notebook.
 3. Elegir el kernel de Python y ejecutar todas las celdas de arriba abajo.
 
+Las corridas largas ya están guardadas en `resultados/`, y el notebook las lee en vez de volver a calcularlas, así que
+ejecutarlo completo tarda unos minutos. Para recalcularlas hay cuatro interruptores que por defecto valen `False`:
+`RECALCULAR` (la corrida base y las 15 de las combinaciones, unos 45 minutos), `CORRER_CONFIGS` (las 36 de las
+configuraciones, unos 100 minutos), `CORRER_META` (las 10 de la meta-evaluación) y `CORRER_AZAR` (el baseline aleatorio);
+estos dos últimos tardaron unos 75 minutos juntos. Los tiempos son de un equipo de 12 núcleos y las corridas se reparten
+entre todos. Las configuraciones, la meta-evaluación y el baseline guardan cada corrida apenas termina, así que si algo
+se corta, al relanzar solo se calculan las que faltan.
+
 El notebook lee los audios con la ruta relativa `audios/`, así que debe quedar junto a esa carpeta.
-Todas las semillas aleatorias están fijas (2026).
+Todas las semillas aleatorias están fijas: 2026 en general, 2026 a 2030 en las comparaciones y 101 a 110 en la
+meta-evaluación.
 
 ## Audios
 
-Formato WAV mono, 22050 Hz, 16 bits. Las notas de piano son del Steinway B de la
+Formato WAV mono, 22050 Hz, 16 bits. `piano_G4.wav` no se usa para entrenar el instrumento: solo se carga en la prueba
+con una nota no vista. Las notas de piano son del Steinway B de la
 Universidad de Iowa, Musical Instrument Samples (https://theremin.music.uiowa.edu/MIS.html), intensidad mf,
 recortadas y normalizadas. El silbido es propio.
 
