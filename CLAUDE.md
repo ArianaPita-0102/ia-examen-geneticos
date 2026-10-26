@@ -45,7 +45,8 @@ la diversidad cae bajo 0.05). Son 1 base más 11 variaciones.
 
 ## Meta-evaluación
 - 10 corridas con semillas distintas de la mejor configuración (tabla y boxplot).
-- Baseline: búsqueda aleatoria con las mismas 6000 evaluaciones y 10 semillas, test de Mann-Whitney.
+- Baseline: búsqueda aleatoria con 10 semillas, con las mismas evaluaciones que gasta la configuración base (el
+  promedio de la tabla de configuraciones, 3855) y además con 6000. Test de Mann-Whitney contra el AG.
 - Tornado: cada gen ±10 % del rango desde el mejor individuo, cambio en el fitness A.
 - Generalización: probar con una nota no vista (G4).
 - Audios finales en salidas/: Gen 0, mejor evolucionado y melodía final.
