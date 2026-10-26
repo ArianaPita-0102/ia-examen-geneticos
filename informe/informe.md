@@ -53,3 +53,35 @@ Además del fitness A se implementó el B, la correlación entre espectrogramas.
 distingue poco, toda la evolución usa A.
 
 <p align="center"><img src="figuras/superficie_genes.png" width="85%"><br><em>Figura 2. Fitness A al recorrer cada gen de 0 a 1; la línea punteada es el valor del mejor individuo.</em></p>
+
+## 3. Exploración contra explotación
+
+Explorar es buscar en zonas nuevas y explotar es afinar lo ya encontrado. Como medida se usa la diversidad
+(desviación estándar media de los genes de la población): alta es explorar, baja es explotar. La Tabla 1 compara las
+tres combinaciones con 5 semillas (2026 a 2030) y la Figura 3 muestra la diversidad por generación.
+
+| combinación | aptitud final | generaciones hasta 90 % de la mejora | generaciones hasta diversidad < 0.05 | diversidad final | evaluaciones |
+| --- | --- | --- | --- | --- | --- |
+| C1 torneo + blend + gaussiana | 0.7316 ± 0.0007 | 13.4 | 13.8 | 0.026 | 3890 |
+| C2 ruleta + uniforme + uniforme | 0.7248 ± 0.0022 | 26.8 | nunca | 0.252 | 3425 |
+| C3 torneo + blend + no uniforme | 0.7319 ± 0.0003 | 12.8 | 22.4 | 0.014 | 4732 |
+
+*Tabla 1. Media (y desviación) de 5 semillas. La mejora se mide del Gen 0 a la aptitud final.*
+
+C2 explora: casi no pierde diversidad (de 0.284 a 0.252) y sube despacio. C1 y C3 explotan: la diversidad cae bajo 0.05
+en unas 14 y 22 generaciones y terminan más arriba.
+
+¿Qué operador empuja hacia cada lado? Solo la selección se midió por separado. En 60 individuos al azar, el torneo
+(k = 3) elige padres con aptitud media 0.610 y la ruleta 0.577, contra 0.573 de la población (notebook): el torneo
+presiona más, hacia explotar, y la ruleta casi no, porque las aptitudes se parecen. Por diseño, el cruce blend-alpha y
+la mutación gaussiana dejan hijos cerca de los padres (explotación), y la mutación uniforme reinicia un gen en todo
+[0, 1] (exploración). Pero cada combinación cambia los tres operadores a la vez, así que los datos no separan el
+efecto del cruce y de la mutación.
+
+La hipótesis de que la mutación no uniforme afinaría mejor en C3 no se sostuvo: 0.7319 contra 0.7316 de C1 es menos que
+la desviación entre semillas, y C3 gasta 22 % más evaluaciones. Se eligió C1.
+
+<table><tr>
+<td><img src="figuras/diversidad_combinaciones.png"><br><em>Figura 3. Diversidad por generación (línea gruesa: media; finas: cada semilla).</em></td>
+<td><img src="figuras/convergencia_configuraciones.png"><br><em>Figura 4. Aptitud máxima contra evaluaciones, una variable a la vez (negro: base).</em></td>
+</tr></table>
