@@ -104,3 +104,31 @@ Con 3 semillas por configuración, las diferencias de milésimas son orientativa
 población 20 llega a 0.7314 con 1442 evaluaciones y población 150 a 0.7329 con 12196. Que todas las configuraciones
 lleguen casi al mismo valor, mientras la búsqueda aleatoria se queda en 0.716, sugiere que el techo de ~0.73 lo pone
 el sintetizador y no el AG.
+
+## 5. ¿Cómo se demuestra que el AG es mejor que una búsqueda aleatoria?
+
+Se comparó la aptitud final del AG (configuración base, 10 semillas, 101 a 110) con la mejor aptitud de una búsqueda
+aleatoria con las mismas semillas y el mismo número de evaluaciones. Las métricas fueron la aptitud final, el test de
+Mann-Whitney y la curva de mejor aptitud acumulada.
+
+El AG llega a 0.7321 ± 0.0005 (0.7314 a 0.7328). El azar con 3855 evaluaciones (lo que gasta en promedio la
+configuración base) llega a 0.7140 ± 0.0036, y con 6000 a 0.7164 ± 0.0032. La mejor corrida al azar (0.7229) queda
+por debajo de la peor del AG. El test de Mann-Whitney exacto, a una cola (H1: AG mayor que azar), da U = 100, el
+máximo posible, y p = 5.4e-6 en ambos casos; a dos colas sería el doble. En la Figura 5 los dos parten igual (0.686 a
+las 60 evaluaciones, con la misma población inicial) y el AG supera el valor final medio del azar (0.7164) desde la
+evaluación 340.
+
+Sobre el costo: el AG no gasta lo mismo en todas las corridas. Usa 4481 ± 943 evaluaciones (de 2900 a 5603) y 80 ± 17
+generaciones, y tres corridas llegaron al tope de 100. Como el promedio supera las 3855 del baseline, también se
+comparó con 6000 y el resultado es el mismo.
+
+¿Y si solo aprendió las 5 notas? Con G4, que no se usó para entrenar, los 10 individuos finales sacan 0.7878 ± 0.0158 y
+100 individuos al azar 0.5653 ± 0.0425 (Figura 6; Mann-Whitney exacto a una cola, U = 1000, p = 2.1e-14). El mejor
+individuo saca 0.7695 en G4, dentro del rango de sus notas de entrenamiento (0.651 a 0.816, notebook). Hay
+generalización, pero limitada: G4 está entre F4 y A4, es interpolación dentro del rango entrenado, con una sola nota y
+el mismo piano. No se probó extrapolar.
+
+<table><tr>
+<td><img src="figuras/ag_vs_azar.png"><br><em>Figura 5. Mejor aptitud acumulada (media y ±1 desviación de 10 semillas).</em></td>
+<td><img src="figuras/g4_boxplot.png"><br><em>Figura 6. Fitness A en G4: AG contra individuos al azar.</em></td>
+</tr></table>
