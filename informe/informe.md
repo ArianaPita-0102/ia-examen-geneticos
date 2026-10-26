@@ -67,21 +67,32 @@ semillas (2026 a 2030) y la Figura 3 muestra la diversidad por generación.
 *Tabla 1. Media (y desviación) de 5 semillas. La mejora se mide del Gen 0 a la aptitud final.*
 
 C2 explora: casi no pierde diversidad (de 0.284 a 0.252) y sube despacio. C1 y C3 explotan: la diversidad cae bajo 0.05
-en unas 14 y 22 generaciones y terminan más arriba.
+en unas 14 y 22 generaciones y terminan más arriba. C2 junta tres cambios; la Tabla 2 los separa.
 
-¿Qué operador empuja a cada lado? Solo la selección se midió por separado: en 60 individuos al azar, el torneo
-(k = 3) elige padres con aptitud media 0.610 y la ruleta 0.577, contra 0.573 de la población (notebook). El torneo
-presiona hacia explotar y la ruleta casi no, porque las aptitudes se parecen. Del resto solo se puede decir lo esperable:
-blend-alpha y mutación gaussiana dejan hijos cerca de los padres (explotación) y la mutación uniforme reinicia un gen
-en todo [0, 1] (exploración). Como cada combinación cambia los tres operadores a la vez, los datos no separan el
-efecto del cruce y de la mutación.
+| cambio respecto a la base | aptitud final | evaluaciones hasta 90 % de la mejora | diversidad final |
+| --- | --- | --- | --- |
+| ninguno (base) | 0.7317 ± 0.0007 | 793 | 0.026 |
+| selección: ruleta | 0.7267 ± 0.0025 | 3734 | 0.077 |
+| cruce: uniforme | 0.7325 ± 0.0005 | 955 | 0.028 |
+| mutación: uniforme | 0.7318 ± 0.0007 | 799 | 0.107 |
+| mutación: no uniforme | 0.7318 ± 0.0004 | 862 | 0.015 |
+
+*Tabla 2. Media de 3 semillas (2026 a 2028), un operador distinto a la vez.*
+
+La selección es la que más pesa: con ruleta la aptitud baja a 0.7267 y hacen falta 3734 evaluaciones para recorrer el
+90 % de la mejora, 4.7 veces las de la base. La ruleta casi no distingue a los buenos cuando las aptitudes se parecen
+(en una población al azar, el torneo elige padres con aptitud media 0.610 y la ruleta 0.577; notebook), así que empuja
+hacia explorar, y de más: casi todo el retraso de C2 viene de ahí. La mutación uniforme también explora: deja la
+diversidad final en 0.107, cuatro veces la de la base, sin perder aptitud ni velocidad. El cruce uniforme casi no
+cambia nada, y la mutación no uniforme es la que más baja la diversidad (0.015). Con 3 semillas solo lo de la ruleta
+supera claramente el ruido entre semillas; el resto es orientativo.
 
 La hipótesis de que la mutación no uniforme afinaría mejor en C3 no se sostuvo: 0.7319 contra 0.7316 de C1 es menos que
 la desviación entre semillas, y C3 gasta 22 % más evaluaciones. Se eligió C1.
 
 <table><tr>
 <td><img src="figuras/diversidad_combinaciones.png"><br><em>Figura 3. Diversidad por generación (línea gruesa: media; finas: cada semilla).</em></td>
-<td><img src="figuras/convergencia_configuraciones.png"><br><em>Figura 4. Aptitud máxima contra evaluaciones, una variable a la vez (negro: base).</em></td>
+<td><img src="figuras/prematura.png"><br><em>Figura 4. Aptitud máxima y diversidad: base contra la configuración que provoca convergencia prematura.</em></td>
 </tr></table>
 
 ## 4. Convergencia prematura
