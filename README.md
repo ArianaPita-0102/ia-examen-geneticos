@@ -44,8 +44,3 @@ Formato WAV mono, 22050 Hz, 16 bits. `piano_G4.wav` no se usa para entrenar el i
 con una nota no vista. Las notas de piano son del Steinway B de la
 Universidad de Iowa, Musical Instrument Samples (https://theremin.music.uiowa.edu/MIS.html), intensidad mf,
 recortadas y normalizadas. El silbido es propio.
-
-## Uso de IA
-
-En el diseño y la implementación se usó asistencia de IA generativa (Claude, Anthropic, 2026), revisada por las
-integrantes. No se usa ningún modelo preentrenado de deep learning.
