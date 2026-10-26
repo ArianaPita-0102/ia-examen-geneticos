@@ -149,3 +149,15 @@ el mismo piano. No se probó extrapolar.
   redondea a notas MIDI. No hay una medida numérica de qué tanto se parece la melodía final al silbido: solo se compara
   escuchando los audios de `salidas/`. La encuesta informal a 5 o 10 personas no se hizo.
 - **Grupo de 2.** El enunciado pide 4 o 5 integrantes. Entre dos personas se cubrieron las cinco capas del AG.
+
+## Contribución de cada integrante
+
+| Rol (capa del AG) | Lo que se hizo | Integrante |
+| --- | --- | --- |
+| 1. Codificador (representación) | Notas del silbido por FFT, cromosoma de 12 genes, `codificar` y `decodificar` con prueba, tamaño del espacio | ______________________ |
+| 2. Traductor (fitness) | Síntesis aditiva, fitness A y B, audio comparativo, barrido de la superficie de fitness | ______________________ |
+| 3. Motor (operadores) | Selección (torneo, ruleta), cruce (blend-alpha, uniforme), mutación (gaussiana, uniforme, no uniforme), comparación de C1, C2 y C3 | ______________________ |
+| 4. Estratega (dinámica) | Ciclo del AG con élite, parada e inmigración, 12 configuraciones con 3 semillas, curvas de convergencia | ______________________ |
+| 5. Analista (meta-evaluación) | 10 corridas, baseline aleatorio con Mann-Whitney, tornado, prueba con G4, audios finales, notebook integrado | ______________________ |
+
+No se hizo la encuesta informal, y croma no se implementó como métrica alternativa (se usó correlación espectral).
