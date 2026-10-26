@@ -132,3 +132,20 @@ el mismo piano. No se probó extrapolar.
 <td><img src="figuras/ag_vs_azar.png"><br><em>Figura 5. Mejor aptitud acumulada (media y ±1 desviación de 10 semillas).</em></td>
 <td><img src="figuras/g4_boxplot.png"><br><em>Figura 6. Fitness A en G4: AG contra individuos al azar.</em></td>
 </tr></table>
+
+## Límites
+
+- **Techo del sintetizador.** La aptitud se estanca en ~0.73 en todas las configuraciones. El techo parece venir del
+  sintetizador y no del AG, pero es una hipótesis: no se probó otro sintetizador.
+- **Pocas semillas.** Con 3 semillas por configuración, las diferencias de milésimas son orientativas.
+- **Métrica B.** Tiene rango estrecho y poco acuerdo con A, por eso se evolucionó solo con A. No se implementó croma.
+- **Óptimo del mejor individuo.** En el tornado, 23 de los 24 movimientos de ±10 % bajaron el fitness y uno quedó igual
+  (el gen ya estaba en el borde). El barrido de la Figura 2 muestra lo mismo a lo largo de cada eje. Eso es consistente
+  con un óptimo local, pero no prueba un óptimo global ni descarta mejoras moviendo varios genes a la vez.
+- **Decaimiento.** `tau_rapido` y `tau_lento` casi no pesan al moverlos ±10 % (menos de 0.001), lo que indica que la
+  métrica casi no ve el decaimiento. En el barrido completo `tau_rapido` baja solo 0.0077, pero `tau_lento` baja
+  0.048: la métrica sí lo nota si se aleja mucho.
+- **El silbido.** Tiene afinación imperfecta (varios intervalos quedan entre dos semitonos, notebook) y la melodía se
+  redondea a notas MIDI. No hay una medida numérica de qué tanto se parece la melodía final al silbido: solo se compara
+  escuchando los audios de `salidas/`. La encuesta informal a 5 o 10 personas no se hizo.
+- **Grupo de 2.** El enunciado pide 4 o 5 integrantes. Entre dos personas se cubrieron las cinco capas del AG.
