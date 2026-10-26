@@ -1,3 +1,6 @@
+# Integrantes
+Ariana Aylen Pita Vargas
+Maria Jose Sandoval Orellana
 # Del silbido al piano: examen práctico de Algoritmos Genéticos
 
 IA, Universidad Católica Boliviana. Un silbido se convierte en una melodía tocada por un piano sintético
