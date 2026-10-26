@@ -35,3 +35,21 @@ La Figura 1 muestra cuánto pesa cada gen: `a2`, `m` y `a4` bajan el fitness má
 `tau_rapido` y `tau_lento` lo mueven menos de 0.001. Dos de los 12 genes casi no influyen.
 
 <p align="center"><img src="figuras/tornado.png" width="55%"><br><em>Figura 1. Cambio del fitness A al mover cada gen ±10 % de su rango desde el mejor individuo.</em></p>
+
+## 2. ¿Qué es una superficie de fitness y por qué debe ser suave?
+
+La superficie de fitness es la altura (la aptitud) que le toca a cada combinación de genes, y el AG busca su parte más
+alta. Cruce y mutación crean hijos cerca de sus padres, así que el AG avanza solo si "cerca" en los genes significa
+"parecido" en fitness. Con saltos o muchos picos, un buen padre no daría buenos hijos y la búsqueda se parecería al azar.
+
+La Figura 2 recorre cada gen de 0 a 1 en 41 pasos desde el mejor individuo (`superficie.csv`). Nueve de los 12 cortes
+tienen un solo pico. Entre puntos vecinos (paso de 0.025) el fitness cambia como mucho 0.011, salvo en `m` (0.035),
+mientras que la caída total llega hasta 0.083. `ataque` y `B` tienen picos pequeños extra (8 y 4), pero el rango
+total de `ataque` es de solo 0.019. La superficie es bastante suave, aunque solo vimos cortes de un gen a la vez y no
+sabemos cómo interactúan entre ellos.
+
+Además del fitness A se implementó el B, la correlación entre espectrogramas. En 60 individuos al azar, B tiene media
+0.870 y máximo 0.901 (rango estrecho), y su correlación con A es −0.04 (notebook). Casi no se parecen, y como B
+distingue poco, toda la evolución usa A.
+
+<p align="center"><img src="figuras/superficie_genes.png" width="85%"><br><em>Figura 2. Fitness A al recorrer cada gen de 0 a 1; la línea punteada es el valor del mejor individuo.</em></p>
