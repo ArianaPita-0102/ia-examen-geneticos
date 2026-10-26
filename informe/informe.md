@@ -1,8 +1,9 @@
 # Del silbido al piano: informe
 
 IA, Universidad Católica Boliviana. Examen práctico grupal de Algoritmos Genéticos.
-Integrantes: ______________________ y ______________________
-
+Integrantes: 
+- Ariana Aylen Pita Vargas
+- Maria Jose Sandoval Orellana
 ## Resumen
 
 Un algoritmo genético (AG) hecho desde cero evoluciona los 12 parámetros de un piano sintético aditivo para que suene
