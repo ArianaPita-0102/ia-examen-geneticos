@@ -102,12 +102,19 @@ detecta mirando juntas la diversidad y la aptitud máxima: diversidad que se hun
 mutación, inmigración (reemplazar al 10 % peor si la diversidad cae bajo 0.05), población grande o menos presión de
 selección.
 
-La diversidad sí se hundió, de 0.284 a menos de 0.05 en unas 14 generaciones en C1 y en la base, pero no se observó
-convergencia prematura con daño visible. En las 12 configuraciones (3 semillas, Figura 4) la aptitud media final está
-entre 0.7306 y 0.7329. Las que conservan más diversidad no ganan: la inmigración (diversidad final 0.118) llega a
-0.7323, la mutación 0.3 (0.078) a 0.7317 y la base (0.026) a 0.7317. La mutación 0.02 casi pierde toda la diversidad
-(0.0086) y llega a 0.7306, el valor más bajo de las 12, solo 0.0011 bajo la base y parecido a la desviación entre
-semillas (0.0007).
+Para ver cómo luce se provocó a propósito: población 10, mutación 0 y torneo k = 5, con 5 semillas (`prematura.csv`,
+Figura 4). Aquí sí apareció. La diversidad bajó de 0.05 en solo 3 generaciones (entre 2 y 4) contra 13.8 de la base, y
+terminó en 0: todos los individuos quedaron iguales y el AG ya no puede mejorar. La última mejora fue en la generación
+4.4 en promedio y la corrida paró a las 24.8 generaciones con 46 evaluaciones. La aptitud final fue 0.6815 ± 0.0225
+(0.6511 a 0.7120) contra 0.7316 ± 0.0007 de la base, y una semilla nunca superó su Gen 0 (0.6910). Como se cambiaron
+los tres parámetros a la vez, no sabemos cuál pesa más.
+
+Con configuraciones razonables, en cambio, no se observó convergencia prematura con daño visible. La diversidad también
+cae bajo 0.05 en unas 14 generaciones en la base, pero en las 12 configuraciones (3 semillas) la aptitud media final está
+entre 0.7306 y 0.7329. Las que conservan más diversidad no ganan: inmigración (diversidad final 0.118) llega a 0.7323,
+mutación 0.3 (0.078) a 0.7317 y la base (0.026) a 0.7317. La mutación 0.02 casi pierde toda la diversidad (0.0086) y
+llega a 0.7306, el valor más bajo de las 12, solo 0.0011 bajo la base y parecido a la desviación entre semillas (0.0007).
+La base (N = 60, mutación 0.08, k = 3) evita el problema.
 
 Con 3 semillas, las diferencias de milésimas son orientativas. Lo que sí cambia es el costo: población 20 llega a
 0.7314 con 1442 evaluaciones y población 150 a 0.7329 con 12196. Que todas lleguen casi al mismo valor, y la búsqueda
