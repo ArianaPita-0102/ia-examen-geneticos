@@ -85,3 +85,22 @@ la desviación entre semillas, y C3 gasta 22 % más evaluaciones. Se eligió C1.
 <td><img src="figuras/diversidad_combinaciones.png"><br><em>Figura 3. Diversidad por generación (línea gruesa: media; finas: cada semilla).</em></td>
 <td><img src="figuras/convergencia_configuraciones.png"><br><em>Figura 4. Aptitud máxima contra evaluaciones, una variable a la vez (negro: base).</em></td>
 </tr></table>
+
+## 4. Convergencia prematura
+
+Es cuando la población pierde la diversidad antes de encontrar un buen óptimo y se queda atascada en uno mediocre. Se
+detecta mirando juntas la diversidad y la aptitud máxima por generación: diversidad que se hunde con aptitud plana. Se
+evita con más mutación, con inmigración (reemplazar al 10 % peor por individuos nuevos si la diversidad cae bajo 0.05),
+con población grande o con menos presión de selección.
+
+La diversidad sí se hundió: de 0.284 a menos de 0.05 en unas 14 generaciones en C1 y en la base. Pero no se observó
+convergencia prematura con daño visible. En las 12 configuraciones (3 semillas cada una, Figura 4) la aptitud media
+final está entre 0.7306 y 0.7329, y las corridas sueltas entre 0.7299 y 0.7335. Las que conservan más diversidad no
+ganan: la inmigración termina con diversidad 0.118 y aptitud 0.7323, la mutación 0.3 con 0.078 y 0.7317, y la base con
+0.026 y 0.7317. La mutación 0.02 pierde casi toda la diversidad (0.0086) y llega a 0.7306, el valor más bajo de las 12,
+pero solo 0.0011 bajo la base, parecido a la desviación entre semillas (0.0007).
+
+Con 3 semillas por configuración, las diferencias de milésimas son orientativas. Lo que sí cambia mucho es el costo:
+población 20 llega a 0.7314 con 1442 evaluaciones y población 150 a 0.7329 con 12196. Que todas las configuraciones
+lleguen casi al mismo valor, mientras la búsqueda aleatoria se queda en 0.716, sugiere que el techo de ~0.73 lo pone
+el sintetizador y no el AG.
