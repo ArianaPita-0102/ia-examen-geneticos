@@ -12,35 +12,34 @@ sintética y la real.
 
 Con 10 semillas el AG llega a 0.7321 ± 0.0005, contra 0.7164 ± 0.0032 de una búsqueda aleatoria con 6000 evaluaciones.
 Los números salen de `resultados/*.csv`; los pocos que vienen de una salida del notebook llevan la marca (notebook).
-Las figuras se generan en `silbido_piano.ipynb` y se guardan en `informe/figuras/`. Las notas de piano son del
-Steinway B de la Universidad de Iowa (Musical Instrument Samples, https://theremin.music.uiowa.edu/MIS.html).
+Las figuras salen de `silbido_piano.ipynb`. Las notas de piano son del Steinway B de la Universidad de Iowa
+(Musical Instrument Samples, https://theremin.music.uiowa.edu/MIS.html).
+
 
 ## 1. ¿Cómo influye la representación del cromosoma en la eficiencia del AG?
 
-El cromosoma tiene 12 genes reales en [0, 1]: las amplitudes de los armónicos 2 a 6, el ataque, las dos caídas (rápida
-y lenta), el peso `m` entre ambas, `s`, la inarmonicidad `B` y el ruido del golpe. `decodificar` los lleva a su rango
-físico. Las notas no están en el cromosoma: el instrumento evolucionado toca cualquier melodía después.
+El cromosoma tiene 12 genes reales en [0, 1] (amplitudes de los armónicos 2 a 6, ataque, dos caídas, `m`, `s`,
+inarmonicidad `B` y ruido del golpe), que `decodificar` lleva a su rango físico. Las notas no están en el cromosoma: el
+instrumento evolucionado toca cualquier melodía después.
 
-La representación decide el tamaño del espacio y qué tan bien funcionan los operadores. Con 100 niveles por gen hay
-10^24 instrumentos posibles (notebook), imposible de recorrer entero, pero con 12 genes el AG sí puede explorarlo.
-Además, como todos los genes están en [0, 1], un mismo sigma de mutación (0.1) y un mismo alpha de cruce (0.3) sirven
-para todos.
+La representación decide el tamaño del espacio y cómo actúan los operadores. Con 100 niveles por gen hay 10^24
+instrumentos posibles (notebook), imposible de recorrer entero. Como todos los genes están en [0, 1], el mismo sigma
+de mutación (0.1) y el mismo alpha de cruce (0.3) sirven para todos.
 
-Un ejemplo de mala codificación sería guardar los genes en unidades físicas. Sus rangos van de 0.002 (`B`) a 2.7
-(`tau_lento`), 1350 veces de diferencia, y una mutación de 0.1 sería 50 veces el rango de `B`, que quedaría siempre en
-un extremo. Otra mala sería meter las 24 notas en el cromosoma: más genes y un fitness que mezcla melodía con timbre.
-La codificación elegida evita las dos. Ninguna alternativa se probó, así que esto es un argumento y no un resultado.
+Una mala codificación sería guardar los genes en unidades físicas: sus rangos van de 0.002 (`B`) a 2.7 (`tau_lento`)
+y una mutación de 0.1 sería 50 veces el rango de `B`. Otra, meter las 24 notas en el cromosoma. La elegida evita ambas.
+Ninguna alternativa se probó, así que es un argumento y no un resultado.
 
 La Figura 1 muestra cuánto pesa cada gen: `a2`, `m` y `a4` bajan el fitness más de 0.012 con un cambio del 10 %, y
 `tau_rapido` y `tau_lento` lo mueven menos de 0.001. Dos de los 12 genes casi no influyen.
 
-<p align="center"><img src="figuras/tornado.png" width="55%"><br><em>Figura 1. Cambio del fitness A al mover cada gen ±10 % de su rango desde el mejor individuo.</em></p>
+<p align="center"><img src="figuras/tornado.png" width="45%"><br><em>Figura 1. Cambio del fitness A al mover cada gen ±10 % de su rango desde el mejor individuo.</em></p>
 
 ## 2. ¿Qué es una superficie de fitness y por qué debe ser suave?
 
-La superficie de fitness es la altura (la aptitud) que le toca a cada combinación de genes, y el AG busca su parte más
-alta. Cruce y mutación crean hijos cerca de sus padres, así que el AG avanza solo si "cerca" en los genes significa
-"parecido" en fitness. Con saltos o muchos picos, un buen padre no daría buenos hijos y la búsqueda se parecería al azar.
+La superficie de fitness es la aptitud que le toca a cada combinación de genes; el AG busca su parte más alta. Cruce
+y mutación crean hijos cerca de sus padres, así que el AG avanza solo si "cerca" en los genes significa "parecido" en
+fitness. Con saltos o muchos picos, un buen padre no daría buenos hijos y la búsqueda se parecería al azar.
 
 La Figura 2 recorre cada gen de 0 a 1 en 41 pasos desde el mejor individuo (`superficie.csv`). Nueve de los 12 cortes
 tienen un solo pico. Entre puntos vecinos (paso de 0.025) el fitness cambia como mucho 0.011, salvo en `m` (0.035),
@@ -48,17 +47,16 @@ mientras que la caída total llega hasta 0.083. `ataque` y `B` tienen picos pequ
 total de `ataque` es de solo 0.019. La superficie es bastante suave, aunque solo vimos cortes de un gen a la vez y no
 sabemos cómo interactúan entre ellos.
 
-Además del fitness A se implementó el B, la correlación entre espectrogramas. En 60 individuos al azar, B tiene media
-0.870 y máximo 0.901 (rango estrecho), y su correlación con A es −0.04 (notebook). Casi no se parecen, y como B
-distingue poco, toda la evolución usa A.
+Además del fitness A se implementó el B (correlación entre espectrogramas). En 60 individuos al azar, B tiene media
+0.870 y máximo 0.901, un rango estrecho, y su correlación con A es −0.04 (notebook); por eso toda la evolución usa A.
 
-<p align="center"><img src="figuras/superficie_genes.png" width="85%"><br><em>Figura 2. Fitness A al recorrer cada gen de 0 a 1; la línea punteada es el valor del mejor individuo.</em></p>
+<p align="center"><img src="figuras/superficie_genes.png" width="68%"><br><em>Figura 2. Fitness A al recorrer cada gen de 0 a 1; la línea punteada es el valor del mejor individuo.</em></p>
 
 ## 3. Exploración contra explotación
 
-Explorar es buscar en zonas nuevas y explotar es afinar lo ya encontrado. Como medida se usa la diversidad
-(desviación estándar media de los genes de la población): alta es explorar, baja es explotar. La Tabla 1 compara las
-tres combinaciones con 5 semillas (2026 a 2030) y la Figura 3 muestra la diversidad por generación.
+Explorar es buscar en zonas nuevas y explotar es afinar lo ya encontrado. Se mide con la diversidad (desviación
+estándar media de los genes): alta es explorar, baja es explotar. La Tabla 1 compara las tres combinaciones con 5
+semillas (2026 a 2030) y la Figura 3 muestra la diversidad por generación.
 
 | combinación | aptitud final | generaciones hasta 90 % de la mejora | generaciones hasta diversidad < 0.05 | diversidad final | evaluaciones |
 | --- | --- | --- | --- | --- | --- |
@@ -71,11 +69,11 @@ tres combinaciones con 5 semillas (2026 a 2030) y la Figura 3 muestra la diversi
 C2 explora: casi no pierde diversidad (de 0.284 a 0.252) y sube despacio. C1 y C3 explotan: la diversidad cae bajo 0.05
 en unas 14 y 22 generaciones y terminan más arriba.
 
-¿Qué operador empuja hacia cada lado? Solo la selección se midió por separado. En 60 individuos al azar, el torneo
-(k = 3) elige padres con aptitud media 0.610 y la ruleta 0.577, contra 0.573 de la población (notebook): el torneo
-presiona más, hacia explotar, y la ruleta casi no, porque las aptitudes se parecen. Por diseño, el cruce blend-alpha y
-la mutación gaussiana dejan hijos cerca de los padres (explotación), y la mutación uniforme reinicia un gen en todo
-[0, 1] (exploración). Pero cada combinación cambia los tres operadores a la vez, así que los datos no separan el
+¿Qué operador empuja a cada lado? Solo la selección se midió por separado: en 60 individuos al azar, el torneo
+(k = 3) elige padres con aptitud media 0.610 y la ruleta 0.577, contra 0.573 de la población (notebook). El torneo
+presiona hacia explotar y la ruleta casi no, porque las aptitudes se parecen. Del resto solo se puede decir lo esperable:
+blend-alpha y mutación gaussiana dejan hijos cerca de los padres (explotación) y la mutación uniforme reinicia un gen
+en todo [0, 1] (exploración). Como cada combinación cambia los tres operadores a la vez, los datos no separan el
 efecto del cruce y de la mutación.
 
 La hipótesis de que la mutación no uniforme afinaría mejor en C3 no se sostuvo: 0.7319 contra 0.7316 de C1 es menos que
@@ -88,28 +86,27 @@ la desviación entre semillas, y C3 gasta 22 % más evaluaciones. Se eligió C1.
 
 ## 4. Convergencia prematura
 
-Es cuando la población pierde la diversidad antes de encontrar un buen óptimo y se queda atascada en uno mediocre. Se
-detecta mirando juntas la diversidad y la aptitud máxima por generación: diversidad que se hunde con aptitud plana. Se
-evita con más mutación, con inmigración (reemplazar al 10 % peor por individuos nuevos si la diversidad cae bajo 0.05),
-con población grande o con menos presión de selección.
+Es cuando la población pierde la diversidad antes de encontrar un buen óptimo y queda atascada en uno mediocre. Se
+detecta mirando juntas la diversidad y la aptitud máxima: diversidad que se hunde con aptitud plana. Se evita con más
+mutación, inmigración (reemplazar al 10 % peor si la diversidad cae bajo 0.05), población grande o menos presión de
+selección.
 
-La diversidad sí se hundió: de 0.284 a menos de 0.05 en unas 14 generaciones en C1 y en la base. Pero no se observó
-convergencia prematura con daño visible. En las 12 configuraciones (3 semillas cada una, Figura 4) la aptitud media
-final está entre 0.7306 y 0.7329, y las corridas sueltas entre 0.7299 y 0.7335. Las que conservan más diversidad no
-ganan: la inmigración termina con diversidad 0.118 y aptitud 0.7323, la mutación 0.3 con 0.078 y 0.7317, y la base con
-0.026 y 0.7317. La mutación 0.02 pierde casi toda la diversidad (0.0086) y llega a 0.7306, el valor más bajo de las 12,
-pero solo 0.0011 bajo la base, parecido a la desviación entre semillas (0.0007).
+La diversidad sí se hundió, de 0.284 a menos de 0.05 en unas 14 generaciones en C1 y en la base, pero no se observó
+convergencia prematura con daño visible. En las 12 configuraciones (3 semillas, Figura 4) la aptitud media final está
+entre 0.7306 y 0.7329. Las que conservan más diversidad no ganan: la inmigración (diversidad final 0.118) llega a
+0.7323, la mutación 0.3 (0.078) a 0.7317 y la base (0.026) a 0.7317. La mutación 0.02 casi pierde toda la diversidad
+(0.0086) y llega a 0.7306, el valor más bajo de las 12, solo 0.0011 bajo la base y parecido a la desviación entre
+semillas (0.0007).
 
-Con 3 semillas por configuración, las diferencias de milésimas son orientativas. Lo que sí cambia mucho es el costo:
-población 20 llega a 0.7314 con 1442 evaluaciones y población 150 a 0.7329 con 12196. Que todas las configuraciones
-lleguen casi al mismo valor, mientras la búsqueda aleatoria se queda en 0.716, sugiere que el techo de ~0.73 lo pone
-el sintetizador y no el AG.
+Con 3 semillas, las diferencias de milésimas son orientativas. Lo que sí cambia es el costo: población 20 llega a
+0.7314 con 1442 evaluaciones y población 150 a 0.7329 con 12196. Que todas lleguen casi al mismo valor, y la búsqueda
+aleatoria se quede en 0.716, sugiere que el techo de ~0.73 lo pone el sintetizador y no el AG.
 
 ## 5. ¿Cómo se demuestra que el AG es mejor que una búsqueda aleatoria?
 
-Se comparó la aptitud final del AG (configuración base, 10 semillas, 101 a 110) con la mejor aptitud de una búsqueda
-aleatoria con las mismas semillas y el mismo número de evaluaciones. Las métricas fueron la aptitud final, el test de
-Mann-Whitney y la curva de mejor aptitud acumulada.
+Se comparó la aptitud final del AG (configuración base, semillas 101 a 110) con la mejor aptitud de una búsqueda
+aleatoria con las mismas semillas y las mismas evaluaciones, con la aptitud final, el test de Mann-Whitney y la curva de
+mejor aptitud acumulada.
 
 El AG llega a 0.7321 ± 0.0005 (0.7314 a 0.7328). El azar con 3855 evaluaciones (lo que gasta en promedio la
 configuración base) llega a 0.7140 ± 0.0036, y con 6000 a 0.7164 ± 0.0032. La mejor corrida al azar (0.7229) queda
@@ -118,15 +115,13 @@ máximo posible, y p = 5.4e-6 en ambos casos; a dos colas sería el doble. En la
 las 60 evaluaciones, con la misma población inicial) y el AG supera el valor final medio del azar (0.7164) desde la
 evaluación 340.
 
-Sobre el costo: el AG no gasta lo mismo en todas las corridas. Usa 4481 ± 943 evaluaciones (de 2900 a 5603) y 80 ± 17
-generaciones, y tres corridas llegaron al tope de 100. Como el promedio supera las 3855 del baseline, también se
-comparó con 6000 y el resultado es el mismo.
+Sobre el costo: el AG usa 4481 ± 943 evaluaciones (de 2900 a 5603) y 80 ± 17 generaciones; tres corridas llegaron al
+tope de 100. Como el promedio supera las 3855 del baseline, también se comparó con 6000, con el mismo resultado.
 
-¿Y si solo aprendió las 5 notas? Con G4, que no se usó para entrenar, los 10 individuos finales sacan 0.7878 ± 0.0158 y
+¿Y si solo aprendió las 5 notas? Con G4 (no usada para entrenar), los 10 individuos finales sacan 0.7878 ± 0.0158 y
 100 individuos al azar 0.5653 ± 0.0425 (Figura 6; Mann-Whitney exacto a una cola, U = 1000, p = 2.1e-14). El mejor
-individuo saca 0.7695 en G4, dentro del rango de sus notas de entrenamiento (0.651 a 0.816, notebook). Hay
-generalización, pero limitada: G4 está entre F4 y A4, es interpolación dentro del rango entrenado, con una sola nota y
-el mismo piano. No se probó extrapolar.
+individuo saca 0.7695, dentro del rango de sus notas de entrenamiento (0.651 a 0.816, notebook). Hay generalización,
+pero limitada: G4 está entre F4 y A4, es interpolación, con una sola nota y el mismo piano; no se probó extrapolar.
 
 <table><tr>
 <td><img src="figuras/ag_vs_azar.png"><br><em>Figura 5. Mejor aptitud acumulada (media y ±1 desviación de 10 semillas).</em></td>
@@ -135,20 +130,20 @@ el mismo piano. No se probó extrapolar.
 
 ## Límites
 
-- **Techo del sintetizador.** La aptitud se estanca en ~0.73 en todas las configuraciones. El techo parece venir del
-  sintetizador y no del AG, pero es una hipótesis: no se probó otro sintetizador.
+- **Techo.** La aptitud se estanca en ~0.73 en todas las configuraciones. El techo parece venir del sintetizador y no
+  del AG, pero es una hipótesis: no se probó otro sintetizador.
 - **Pocas semillas.** Con 3 semillas por configuración, las diferencias de milésimas son orientativas.
-- **Métrica B.** Tiene rango estrecho y poco acuerdo con A, por eso se evolucionó solo con A. No se implementó croma.
-- **Óptimo del mejor individuo.** En el tornado, 23 de los 24 movimientos de ±10 % bajaron el fitness y uno quedó igual
-  (el gen ya estaba en el borde). El barrido de la Figura 2 muestra lo mismo a lo largo de cada eje. Eso es consistente
-  con un óptimo local, pero no prueba un óptimo global ni descarta mejoras moviendo varios genes a la vez.
-- **Decaimiento.** `tau_rapido` y `tau_lento` casi no pesan al moverlos ±10 % (menos de 0.001), lo que indica que la
-  métrica casi no ve el decaimiento. En el barrido completo `tau_rapido` baja solo 0.0077, pero `tau_lento` baja
-  0.048: la métrica sí lo nota si se aleja mucho.
-- **El silbido.** Tiene afinación imperfecta (varios intervalos quedan entre dos semitonos, notebook) y la melodía se
-  redondea a notas MIDI. No hay una medida numérica de qué tanto se parece la melodía final al silbido: solo se compara
-  escuchando los audios de `salidas/`. La encuesta informal a 5 o 10 personas no se hizo.
-- **Grupo de 2.** El enunciado pide 4 o 5 integrantes. Entre dos personas se cubrieron las cinco capas del AG.
+- **Métrica B.** Tiene rango estrecho y poco acuerdo con A; por eso se evolucionó solo con A.
+- **Óptimo.** En el tornado, 23 de los 24 movimientos de ±10 % bajaron el fitness y uno quedó igual (el gen estaba en
+  el borde); el barrido de la Figura 2 lo confirma eje por eje. Es consistente con un óptimo local, pero no prueba un
+  óptimo global ni descarta mejoras moviendo varios genes a la vez.
+- **Decaimiento.** `tau_rapido` y `tau_lento` casi no pesan con ±10 % (menos de 0.001), lo que indica que la métrica
+  casi no ve el decaimiento. En el barrido completo `tau_rapido` baja solo 0.0077, pero `tau_lento` baja 0.048: lo nota
+  si se aleja mucho.
+- **El silbido.** Su afinación es imperfecta (varios intervalos quedan entre dos semitonos, notebook) y la melodía se
+  redondea a notas MIDI. No hay una medida numérica de qué tanto se parece la melodía final al silbido, solo los audios
+  de `salidas/`. La encuesta informal no se hizo.
+- **Grupo de 2.** El enunciado pide 4 o 5 integrantes; entre dos se cubrieron las cinco capas.
 
 ## Contribución de cada integrante
 
