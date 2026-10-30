@@ -7,6 +7,8 @@ cuyos parámetros evoluciona un algoritmo genético implementado desde cero.
 
 Notebook completo: síntesis, algoritmo genético, comparación de operadores y de configuraciones, y meta-evaluación.
 Falta el informe (`informe/informe.md`), que está en preparación.
+Informe técnico: Redactado y disponible en el archivo (`informe/informe.md`)
+Evaluación perceptual: Encuesta informal completada y registrada en el archivo (`resultados/encuesta.csv`).
 
 ## Contenido
 
@@ -16,7 +18,7 @@ Falta el informe (`informe/informe.md`), que está en preparación.
 | `audios/` | Entradas: `silbido.wav`, las 5 notas de piano de entrenamiento (D4, F4, A4, C5, D5) y `piano_G4.wav`, que solo se usa en la prueba de generalización |
 | `salidas/` | Audios generados por el notebook: melodías con la referencia, el Gen 0 y el mejor individuo, y la nota A4 con el Gen 0 y con el mejor |
 | `docs/` | Enunciado del examen |
-| `resultados/` | CSV de las corridas y los experimentos: `combinaciones.csv`, `configs.csv`, `meta.csv`, `azar.csv`, `prematura.csv`, `operadores.csv`, `superficie.csv` y `g4_azar.csv` |
+| `resultados/` | CSV de las corridas, los experimentos y encuesta informal: `combinaciones.csv`, `configs.csv`, `meta.csv`, `azar.csv`, `prematura.csv`, `operadores.csv`, `superficie.csv` y `g4_azar.csv`, `encuesta.csv` |
 | `informe/` | `informe.md` y las figuras que genera el notebook en `figuras/` |
 
 ## Cómo correrlo
