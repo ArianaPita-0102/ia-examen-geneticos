@@ -149,7 +149,7 @@ Se comparó la aptitud final del AG (configuración base, semillas 101 a 110) co
 aleatoria con las mismas semillas y las mismas evaluaciones, con la aptitud final, el test de Mann-Whitney (Mann y
 Whitney, 1947) y la curva de mejor aptitud acumulada.
 
-El AG llega a 0.7321 ± 0.0005 (0.7314 a 0.7328). El azar con 3855 evaluaciones (lo que gasta en promedio la
+El AG llega a 0.7321 ± 0.0005 (0.7314 a 0.7328; Figura 7). El azar con 3855 evaluaciones (lo que gasta en promedio la
 configuración base) llega a 0.7140 ± 0.0036, y con 6000 a 0.7164 ± 0.0032. La mejor corrida al azar (0.7229) queda
 por debajo de la peor del AG. El test de Mann-Whitney exacto, a una cola (H1: AG mayor que azar), da U = 100, el
 máximo posible, y p = 5.4e-6 en ambos casos; a dos colas sería el doble. En la Figura 5 los dos parten igual (0.686 a
@@ -165,6 +165,7 @@ individuo saca 0.7695, dentro del rango de sus notas de entrenamiento (0.651 a 0
 pero limitada: G4 está entre F4 y A4, es interpolación, con una sola nota y el mismo piano; no se probó extrapolar.
 
 <table><tr>
+<td><img src="figuras/boxplot_10_corridas.png"><br><em>Figura 7. Aptitud final de las 10 corridas de la configuración base (semillas 101 a 110).</em></td>
 <td><img src="figuras/ag_vs_azar.png"><br><em>Figura 5. Mejor aptitud acumulada (media y ±1 desviación de 10 semillas).</em></td>
 <td><img src="figuras/g4_boxplot.png"><br><em>Figura 6. Fitness A en G4: AG contra individuos al azar.</em></td>
 </tr></table>
