@@ -1,9 +1,11 @@
 # Del silbido al piano: informe
 
 IA, Universidad Católica Boliviana. Examen práctico grupal de Algoritmos Genéticos.
-Integrantes: 
+
+Integrantes:
 - Ariana Aylen Pita Vargas
 - Maria Jose Sandoval Orellana
+
 ## Resumen
 
 Un algoritmo genético (AG) hecho desde cero evoluciona los 12 parámetros de un piano sintético aditivo para que suene
@@ -20,8 +22,8 @@ Las figuras salen de `silbido_piano.ipynb`. Las notas de piano son del Steinway 
 ## 1. ¿Cómo influye la representación del cromosoma en la eficiencia del AG?
 
 El cromosoma tiene 12 genes reales en [0, 1] (amplitudes de los armónicos 2 a 6, ataque, dos caídas, `m`, `s`,
-inarmonicidad `B` y ruido del golpe), que `decodificar` lleva a su rango físico. Las notas no están en el cromosoma: el
-instrumento evolucionado toca cualquier melodía después.
+inarmonicidad `B` (Fletcher y Rossing, 1998) y ruido del golpe), que `decodificar` lleva a su rango físico. Las notas
+no están en el cromosoma: el instrumento evolucionado toca cualquier melodía después.
 
 La representación decide el tamaño del espacio y cómo actúan los operadores. Con 100 niveles por gen hay 10^24
 instrumentos posibles (notebook), imposible de recorrer entero. Como todos los genes están en [0, 1], el mismo sigma
@@ -51,13 +53,24 @@ sabemos cómo interactúan entre ellos.
 Además del fitness A se implementó el B (correlación entre espectrogramas). En 60 individuos al azar, B tiene media
 0.870 y máximo 0.901, un rango estrecho, y su correlación con A es −0.04 (notebook); por eso toda la evolución usa A.
 
+Se eligió la correlación espectral en vez del croma porque el croma suma toda la energía de cada clase de nota (do,
+do#, re…) sin importar la octava. Para una sola nota de piano, la fundamental y los armónicos 2 y 4 caen en la misma
+clase, y el 3 y el 6 en la quinta. Así se pierde justo lo que el AG intenta ajustar: la proporción entre armónicos y
+cómo decae cada uno. El croma sirve para comparar melodías o acordes, no el timbre de una nota.
+
+No se usó el MSE sobre la onda cruda porque depende de la fase: dos notas con el mismo timbre, pero desfasadas medio
+periodo, darían un error máximo. El oído percibe el timbre por la energía de cada frecuencia en escala logarítmica, no
+por la forma exacta de la onda. La STFT en dB descarta la fase y comprime el rango dinámico, así que compara lo que se
+oye. Con MSE la superficie de fitness sería mucho más irregular. No se probó; es un argumento.
+
 <p align="center"><img src="figuras/superficie_genes.png" width="68%"><br><em>Figura 2. Fitness A al recorrer cada gen de 0 a 1; la línea punteada es el valor del mejor individuo.</em></p>
 
 ## 3. Exploración contra explotación
 
 Explorar es buscar en zonas nuevas y explotar es afinar lo ya encontrado. Se mide con la diversidad (desviación
 estándar media de los genes): alta es explorar, baja es explotar. La Tabla 1 compara las tres combinaciones con 5
-semillas (2026 a 2030) y la Figura 3 muestra la diversidad por generación.
+semillas (2026 a 2030) y la Figura 3 muestra la diversidad por generación. El cruce blend-alpha sigue a Eshelman y
+Schaffer (1993) y la mutación no uniforme a Michalewicz (1996).
 
 | combinación | aptitud final | generaciones hasta 90 % de la mejora | generaciones hasta diversidad < 0.05 | diversidad final | evaluaciones |
 | --- | --- | --- | --- | --- | --- |
@@ -110,6 +123,10 @@ terminó en 0: todos los individuos quedaron iguales y el AG ya no puede mejorar
 (0.6511 a 0.7120) contra 0.7316 ± 0.0007 de la base, y una semilla nunca superó su Gen 0 (0.6910). Como se cambiaron
 los tres parámetros a la vez, no sabemos cuál pesa más.
 
+El experimento también muestra deriva genética: sin mutación y con solo 10 individuos, qué genes sobreviven depende
+tanto del azar del muestreo como de la aptitud, y la población se fija en un solo individuo (diversidad 0) en pocas
+generaciones. En la semilla 2030 toda la población quedó igual al mejor del Gen 0 (0.6910) desde la generación 2.
+
 Con configuraciones razonables, en cambio, no se observó convergencia prematura con daño visible. La diversidad también
 cae bajo 0.05 en unas 14 generaciones en la base, pero en las 12 configuraciones (3 semillas) la aptitud media final está
 entre 0.7306 y 0.7329. Las que conservan más diversidad no ganan: inmigración (diversidad final 0.118) llega a 0.7323,
@@ -121,11 +138,16 @@ Con 3 semillas, las diferencias de milésimas son orientativas. Lo que sí cambi
 0.7314 con 1442 evaluaciones y población 150 a 0.7329 con 12196. Que todas lleguen casi al mismo valor, y la búsqueda
 aleatoria se quede en 0.716, sugiere que el techo de ~0.73 lo pone el sintetizador y no el AG.
 
+**¿Qué hiperparámetro importa más?** En aptitud final, ninguno de forma clara: las 12 configuraciones quedan entre
+0.7306 y 0.7329, dentro del ruido de 3 semillas. En costo, el que más pesa es la población: de 1442 evaluaciones
+(N = 20) a 12196 (N = 150), 8.5 veces más por apenas 0.0015 de aptitud. En diversidad final pesan la mutación (0.0086
+con 0.02 contra 0.078 con 0.3) y la inmigración (0.118).
+
 ## 5. ¿Cómo se demuestra que el AG es mejor que una búsqueda aleatoria?
 
 Se comparó la aptitud final del AG (configuración base, semillas 101 a 110) con la mejor aptitud de una búsqueda
-aleatoria con las mismas semillas y las mismas evaluaciones, con la aptitud final, el test de Mann-Whitney y la curva de
-mejor aptitud acumulada.
+aleatoria con las mismas semillas y las mismas evaluaciones, con la aptitud final, el test de Mann-Whitney (Mann y
+Whitney, 1947) y la curva de mejor aptitud acumulada.
 
 El AG llega a 0.7321 ± 0.0005 (0.7314 a 0.7328). El azar con 3855 evaluaciones (lo que gasta en promedio la
 configuración base) llega a 0.7140 ± 0.0036, y con 6000 a 0.7164 ± 0.0032. La mejor corrida al azar (0.7229) queda
@@ -147,6 +169,28 @@ pero limitada: G4 está entre F4 y A4, es interpolación, con una sola nota y el
 <td><img src="figuras/g4_boxplot.png"><br><em>Figura 6. Fitness A en G4: AG contra individuos al azar.</em></td>
 </tr></table>
 
+### Encuesta informal
+
+Cinco personas escucharon el piano real, la nota A4 del Gen 0 y la del mejor evolucionado, y la melodía final, y
+respondieron "¿cuánto suena a piano?" (1 a 5) y "¿reconoces la melodía?" (respuestas por WhatsApp).
+
+| persona | piano real | Gen 0 | mejor evolucionado | ¿reconoce la melodía? |
+| --- | :---: | :---: | :---: | --- |
+| P1 | 5 | 2 | 4 | más o menos |
+| P2 | 5 | 1 | 3 | sí |
+| P3 | 4 | 2 | 4 | no |
+| P4 | 5 | 3 | 4 | más o menos |
+| P5 | 5 | 2 | 4 | no |
+| **media ± desv.** | **4.8 ± 0.4** | **2.0 ± 0.7** | **3.8 ± 0.4** | 1 sí, 2 más o menos, 2 no |
+
+*Tabla 3. Encuesta informal a 5 personas.*
+
+Las 5 personas le dieron al mejor evolucionado más puntos que al Gen 0 (3.8 contra 2.0), lo que coincide con la
+subida del fitness A (0.685 a 0.731): la mejora numérica también se oye. Aun así, queda por debajo del piano real
+(4.8) en 4 de las 5 respuestas, consistente con el techo de ~0.73 que atribuimos al sintetizador. La melodía se
+reconoce a medias (solo 1 de 5 la reconoció con seguridad), lo que cuadra con la afinación imperfecta del silbido y el
+redondeo a notas MIDI. Con 5 personas y sin controlar el equipo de audio, es una señal orientativa, no una prueba.
+
 ## Límites
 
 - **Techo.** La aptitud se estanca en ~0.73 en todas las configuraciones. El techo parece venir del sintetizador y no
@@ -160,18 +204,17 @@ pero limitada: G4 está entre F4 y A4, es interpolación, con una sola nota y el
   casi no ve el decaimiento. En el barrido completo `tau_rapido` baja solo 0.0077, pero `tau_lento` baja 0.048: lo nota
   si se aleja mucho.
 - **El silbido.** Su afinación es imperfecta (varios intervalos quedan entre dos semitonos, notebook) y la melodía se
-  redondea a notas MIDI. No hay una medida numérica de qué tanto se parece la melodía final al silbido, solo los audios
-  de `salidas/`. La encuesta informal no se hizo.
+  redondea a notas MIDI. No hay una medida numérica de qué tanto se parece la melodía final al silbido; solo los audios
+  de `salidas/` y la encuesta informal.
 - **Grupo de 2.** El enunciado pide 4 o 5 integrantes; entre dos se cubrieron las cinco capas.
 
 ## Contribución de cada integrante
 
 | Rol (capa del AG) | Lo que se hizo | Integrante |
 | --- | --- | --- |
-| 1. Codificador (representación) | Notas del silbido por FFT, cromosoma de 12 genes, `codificar` y `decodificar` con prueba, tamaño del espacio | ______________________ |
-| 2. Traductor (fitness) | Síntesis aditiva, fitness A y B, audio comparativo, barrido de la superficie de fitness | ______________________ |
-| 3. Motor (operadores) | Selección (torneo, ruleta), cruce (blend-alpha, uniforme), mutación (gaussiana, uniforme, no uniforme), comparación de C1, C2 y C3 | ______________________ |
-| 4. Estratega (dinámica) | Ciclo del AG con élite, parada e inmigración, 12 configuraciones con 3 semillas, curvas de convergencia | ______________________ |
-| 5. Analista (meta-evaluación) | 10 corridas, baseline aleatorio con Mann-Whitney, tornado, prueba con G4, audios finales, notebook integrado | ______________________ |
+| 1. Codificador (representación) | Notas del silbido por FFT, cromosoma de 12 genes, `codificar` y `decodificar` con prueba, tamaño del espacio | Ariana Aylen Pita Vargas |
+| 2. Traductor (fitness) | Síntesis aditiva, fitness A y B, audio comparativo, barrido de la superficie de fitness | Ariana Aylen Pita Vargas |
+| 3. Motor (operadores) | Selección (torneo, ruleta), cruce (blend-alpha, uniforme), mutación (gaussiana, uniforme, no uniforme), comparación de C1, C2 y C3 | Ariana Aylen Pita Vargas |
+| 4. Estratega (dinámica) | Ciclo del AG con élite, parada e inmigración, 12 configuraciones con 3 semillas, curvas de convergencia | Maria Jose Sandoval Orellana |
+| 5. Analista (meta-evaluación) | 10 corridas, baseline aleatorio con Mann-Whitney, tornado, prueba con G4, encuesta informal, audios finales, notebook integrado | Maria Jose Sandoval Orellana |
 
-No se hizo la encuesta informal, y croma no se implementó como métrica alternativa (se usó correlación espectral).
